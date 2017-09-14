@@ -8,10 +8,42 @@
 
 <h1>Billing Records</h1>
 
+<form action="/billing-records/flat-fees" method="post">
+	<h2>Flat fee billing input</h2>	
+	<input type="number" step=".01" name="amount" placeholder="amount" required>
+	<select name="clientId" >
+	<option value="">Choose One</option>
+		{{#companies}}
+		<option value="{{id}}">{{name}}</option>
+		{{/companies}}
+	<input type="text" name="description" placeholder="description" required>
+	<button>Create One</button>
+	</select>
+	<input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+</form>
+
+<form action="/billing-records/rate-based" method="post">
+	<h2>Rate based billing input</h2>	
+	<input type="number" step=".01" name="rate" placeholder="rate" required>
+	<input type="number" step=".01" name="quantity" placeholder="quantity" required>
+	
+	<select name="clientId" >
+	<option value="">Choose One</option>
+		{{#companies}}
+		<option value="{{id}}">{{name}}</option>
+		{{/companies}}
+		
+	<input type="text" name="description" placeholder="description" required>
+	<button>Create One</button>
+	</select>
+	<input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+</form>
+
 <table>
   <thead>
     <tr>
       <th>Created on</th>
+      <th>Created by</th>
       <th>Description</th>
       <th>Client</th>
       <th>Fee</th>
@@ -24,6 +56,7 @@
     {{#records}}
       <tr>
         <td>{{ createdOn }}</td>
+        <td>{{ createdBy.username  }}</td>
         <td>{{ description }}</td>
         <td>{{ client.name }}</td>
         <td>${{#amount}}{{ amount }}{{/amount}}</td>

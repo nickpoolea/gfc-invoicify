@@ -10,5 +10,30 @@
 
 <h1>Invoices</h1>
 
+<table>
+	<thead>
+		<th>company</th>
+		<th>created by</th>
+		<th>created on</th>
+		<th>ID</th>
+	</thead>
+	
+	<tbody>
+	{{#invoices}}
+		<tr>
+			<td>{{company.name}}</td>
+			<td>{{createdBy.username}}</td>
+			<td>{{createdOn}}</td>
+			<td>{{id}}</td>
+		</tr>
+	{{/invoices}}
+	</tbody>
+	
+</table>
+
+<form method="get" action="/invoices/new">
+	<button>Create new invoice</button>
+</form>
+
 </body>
 </html>

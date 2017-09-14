@@ -35,7 +35,7 @@ public class HomeController {
 	
 	@PostMapping("signup")
 	public ModelAndView handleSignup(User user) {
-		// TODO THIS IS REALLY DUMB; NEEDS REFACTORING
+		// TODO THIS IS REALLY DUMB; NEEDS REFACTORING 
 		String password = user.getPassword();
 		String encryptedPassword = encoder.encode(password);
 		user.setPassword(encryptedPassword);

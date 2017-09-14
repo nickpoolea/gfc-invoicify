@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -18,6 +19,9 @@ public class InvoiceLineItem {
 
 	@OneToOne
 	private BillingRecord billingRecord;
+	
+	@ManyToOne
+	private Invoice invoice;
 	
 	private Date createdOn;
 	
@@ -54,5 +58,13 @@ public class InvoiceLineItem {
 
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public Invoice getInvoice() {
+		return invoice;
+	}
+
+	public void setInvoice(Invoice invoice) {
+		this.invoice = invoice;
 	}
 }

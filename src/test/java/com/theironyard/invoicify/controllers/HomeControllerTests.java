@@ -45,7 +45,7 @@ public class HomeControllerTests {
 		when(encoder.encode("secret")).thenReturn("encrypted");
 		
 		ModelAndView mv = controller.handleSignup(user);
-		
+		 
 		verify(repo).save(user);
 		verify(encoder).encode("secret");
 		assertThat(user.getPassword()).isEqualTo("encrypted");

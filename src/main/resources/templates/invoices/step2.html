@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Company Invoices</title>
+	</head>
+	<body>
+		<form method="post"	action="/invoices/create">
+		<h1>Available Billing Records</h1>
+		<input name="invoiceNumber" type="text" placeholder="invoice number" required>
+		<table>
+			<thead>
+				<th>Select:</th>
+				<th>Company</th>
+				<th>Created on</th>
+				<th>Created by</th>
+				<th>Description</th>
+				<th>Quantity</th>
+				<th>Rate</th>
+				<th>Amount</th>
+				<th>Total</th>
+			</thead>
+		{{#records}}
+		<tr>
+			<td><input type="checkbox" value="{{id}}" name="recordIds"></td>
+			<td>{{client.name}}</td>
+			<td>{{createdOn}}</td>
+			<td>{{createdBy.username}}</td>
+			<td>{{description}}</td>
+			<td>{{#quantity}}{{quantity}}{{/quantity}}</td>
+			<td>{{#rate}}{{rate}}{{/rate}}</td>
+			<td>{{#amount}}{{amount}}{{/amount}}</td>
+			<td>{{total}}</td>
+		</tr>
+		{{/records}}
+		</table>
+		<button>submit</button>
+		<input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+		<input hidden name="clientId" value={{clientId}}>
+		</form>
+		
+	</body>
+</html>
