@@ -1,0 +1,35 @@
+{{#user}}
+Hello, {{user.username}}
+<form method="post" action="/logout">
+	<button>Logout</button>
+	<input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+</form>
+<br>
+{{/user}}
+
+{{#notUser}}
+<div>
+<a href="/login">Login</a>
+<a href="/signup">Sign up!</a>
+</div>
+{{/notUser}}
+
+{{#isAdmin}}
+<div>
+<a href="/invoices">Invoices</a>
+<a href="/billing-records">Billing Records</a>
+<a href="/admin/companies">Add Company</a>
+</div>
+{{/isAdmin}}
+
+{{#isAccountant}}
+<div>
+<a href="/invoices">Invoices</a>
+</div>
+{{/isAccountant}}
+
+{{#isClerk}}
+<div>
+<a href="/billing-records">Billing Records</a>
+</div>
+{{/isClerk}}

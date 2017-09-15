@@ -6,6 +6,8 @@
 </head>
 <body>
 
+{{>/common/navigation-bar}}
+
 <h1>Billing Records</h1>
 
 <form action="/billing-records/flat-fees" method="post">
@@ -38,6 +40,7 @@
 	</select>
 	<input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
 </form>
+<br>
 
 <table>
   <thead>

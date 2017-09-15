@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,37 +57,49 @@ public class InvoiceController {
 	public ModelAndView selectRecordsForInvoice(long clientId) {
 		ModelAndView mv = new ModelAndView("/invoices/step2");
 		Company company = companyRepo.findOne(clientId);
-		List<BillingRecord> records = billingRepo.findByClientId(company.getId());
+		List<BillingRecord> records = billingRepo.findByClientIdAndLineItemIsNull(clientId);
 		mv.addObject("records", records);
 		mv.addObject("clientId", clientId);
 		return mv;
 	}
 	
 	@PostMapping("create")
-	public String createInvoice(Invoice invoice, long clientId, long[] recordIds, Authentication auth) {
+	public ModelAndView createInvoice(Invoice invoice, long clientId, long[] recordIds, Authentication auth) {
+		ModelAndView mv = new ModelAndView();
 		long nowish = Calendar.getInstance().getTimeInMillis();
 		Date now = new Date(nowish);
 		User creator = (User) auth.getPrincipal();
-		List<BillingRecord> records = billingRepo.findByIdIn(recordIds);
-		List<InvoiceLineItem> items = new ArrayList<InvoiceLineItem>();
-		Company company = companyRepo.findOne(clientId);
 		
-		for (BillingRecord record: records) {
-			InvoiceLineItem lineItem = new InvoiceLineItem();
-			lineItem.setBillingRecord(record);
-			lineItem.setCreatedBy(creator);
-			lineItem.setCreatedOn(now);
-			items.add(lineItem);
-			lineItem.setInvoice(invoice);
+		try {
+			List<BillingRecord> records = billingRepo.findByIdIn(recordIds);
+			List<InvoiceLineItem> items = new ArrayList<InvoiceLineItem>();
+			Company company = companyRepo.findOne(clientId);
+			
+			for (BillingRecord record: records) {
+				InvoiceLineItem lineItem = new InvoiceLineItem();
+				lineItem.setBillingRecord(record);
+				lineItem.setCreatedBy(creator);
+				lineItem.setCreatedOn(now);
+				items.add(lineItem);
+				lineItem.setInvoice(invoice);
+			}
+			
+			invoice.setLineItems(items);
+			invoice.setCompany(company);
+			invoice.setCreatedBy(creator);
+			invoice.setCreatedOn(now);
+			invoiceRepo.save(invoice);
+			
+			mv.setViewName("redirect:");
+			
+		} catch (InvalidDataAccessApiUsageException e) {
+			mv.setViewName("/invoices/step2");
+			mv.addObject("noRecordSelectedError", "Must select at least 1 item from the list");
+			mv.addObject("clientId", clientId);
+			mv.addObject("records", billingRepo.findByClientIdAndLineItemIsNull(clientId));
+			
 		}
-		
-		invoice.setLineItems(items);
-		invoice.setCompany(company);
-		invoice.setCreatedBy(creator);
-		invoice.setCreatedOn(now);
-		invoiceRepo.save(invoice);
-		
-		return "redirect:";
+		return mv;
 	}
 	 
 }
