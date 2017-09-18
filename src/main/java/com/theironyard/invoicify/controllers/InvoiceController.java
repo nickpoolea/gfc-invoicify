@@ -97,7 +97,6 @@ public class InvoiceController {
 			mv.addObject("noRecordSelectedError", "Must select at least 1 item from the list");
 			mv.addObject("clientId", clientId);
 			mv.addObject("records", billingRepo.findByClientIdAndLineItemIsNull(clientId));
-			
 		}
 		return mv;
 	}
