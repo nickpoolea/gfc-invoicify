@@ -14,7 +14,6 @@
 		<form method="post"	action="/invoices/create">
 		<h1>Available Billing Records</h1>
 		
-		{{#records}}
 		<input name="invoiceNumber" type="text" placeholder="invoice number" required>
 		
 		<table>
@@ -29,8 +28,8 @@
 				<th>Amount</th>
 				<th>Total</th>
 			</thead>
+			
 		{{#records}}
-		
 		<tr>
 			<td><input type="checkbox" value="{{id}}" name="recordIds"></td>
 			<td>{{client.name}}</td>
@@ -49,7 +48,6 @@
 		
 		<button>submit</button>
 		
-		{{/records}}
 		
 		<input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
 		<input hidden name="clientId" value={{clientId}}>
